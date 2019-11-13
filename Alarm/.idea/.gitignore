@@ -1,0 +1,5 @@
++
++Alarm/venv/Lib/
++Alarm/venv/Scripts/
++*.xml
++*.iml
