@@ -8,8 +8,9 @@ import ssl
 
 
 class Email:
-    def __init__(self, Gmail, Password, numOfRecs):
-        self.amount = numOfRecs
+    def __init__(self, Gmail, Password, NumofRecipients, Message):
+        self.amount = NumofRecipients
+        self.message = Message
         self.recipients = []
         self.sender = Gmail
         self.passW = Password
@@ -45,10 +46,13 @@ class Email:
                 self.server.sendmail(self.sender, self.recipients[n], message)
                 print("The message has been successfully sent to ", self.recipients[n])
                 n += 1
+    
+    def SendMessages(self):
+        Send = Email(self.sender, self.passW, len(self.recipients))
+        Send.connect()
+        Send.input_recievers()
+        Send.sending(message=self.message)
 
-
-# Send = Email(Gmail=email, password, 1)
-# Send.connect()
-# Send.input_receivers()
-#Send.sending(message='Your message')
-# Send.sending()
+        
+# Send = Email(your email, your token/pass, # of recipients, Message)
+# Send.SendMessages()
