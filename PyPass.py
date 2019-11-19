@@ -1,14 +1,11 @@
-from random import randint
-import json
 from cryptography.fernet import Fernet
+import json
 import os
-
-# i need to hash the password I think
-
-"""PassGen creates a randomized password for you, all you have to do is define the length and
-PassGen will generate it create a json file containing your data and finally encrypt it."""
+from pyfiglet import Figlet
+from random import randint
 
 
+# I will be creating a GUI in the future to support this I think it will be much more secure
 # defining the account name, username and length of password
 # self.path = the path to your database
 # self.secpath is the creates your encryption key file
@@ -16,7 +13,7 @@ PassGen will generate it create a json file containing your data and finally enc
 # self.file opens the new json file for writing purposes
 # self.key will generate a new key and save it to your key.key file
 
-class PassGen:
+class PyPass:
     def __init__(self, DirPath):
         self.account = input('Enter the account name(Gmail, Facebook, Youtube ect..):   ')
         self.username = input('Enter the username associated with the account:   ')
@@ -81,8 +78,7 @@ class PassGen:
         with open(self.filePath, 'wb') as file:
             file.write(encrypted_data)
         file_data = str(file_data).replace('b', 'Your account information (copy and paste your new password) : ')
-        print('\033[3;35;47m' + file_data)
-
+        print('\033[3;35;48m' + file_data)
 
 
 # Decrypter object decrypts the data file that is encrypted
@@ -109,13 +105,12 @@ class Decrypter:
         print(decrypted_data)
 
 
-
 # The user interface just allows the user to decide whether they want to encrypt or decrypt their data
 # then calls the encryption or decryption process
 # crypt_key function is the ignition that starts this whole process
 # calls all of the functions in the PassGen
 def crypt_key(directory, secret_file):
-    key = PassGen(directory)
+    key = PyPass(directory)
     key.generate()
     key.structure()
     for file in os.listdir(directory):
@@ -124,25 +119,37 @@ def crypt_key(directory, secret_file):
     key.load_key()
     key.encrypt()
 
+
 # just a simple ui to ask the user whether they want ot encrypt or decrypt then it performs the functions
 
 
-def user_interface():
+def user_interface(database_directory):
     user_inp = input('Encrypt or Decrypt? :\t')
     user_inp = user_inp.lower()
     if user_inp.__contains__('encrypt'):
         # crypt
-        direct = # directory where your key will be stored
+        direct = database_directory  # directory where your key will be stored
         secret = 'key.key'
         crypt_key(direct, secret)
     if user_inp.__contains__('decrypt'):
         # decrypt
         decry = Decrypter()
-        key_directory = # directory where your key.key file is
-        cryptKey = decry.load_key(key_directory=key_directory)
+        key_direct = database_directory  # directory where your key.key file is
+        cryptKey = decry.load_key(key_directory=key_direct)
         fileName = input('Enter the name of the account associated with the file(don\'t enter .json extension) :\t')
-        fileName = key_directory + fileName + '.json'
+        fileName = key_direct + fileName + '.json'
         decry.decrypt(filename=fileName, key=cryptKey)
 
 
-user_interface()
+font = Figlet(font='doom')
+title = 'PyPass'
+ascii_banner = font.renderText(title)
+print('\033[3;31;48m', ascii_banner)
+print("""\033[3;32;48mPassGen creates a randomized password for you, all you have to do is enter the account name
+and define the length of the password. Your new password will be generated and a file named ex.(YourAccountName.Json)
+will contain all of your data and finally it will be encrypted. 
+If you need to decrypt a file, when searching for the file only enter the account name 
+associated with the file for example.. (Gmail or Youtube) not (Gmail.json/ Youtube.json.) """)
+# the database directory is where the key must be stored at this point
+# the key will be stored in the directory containing all of your passwords
+# user_interface('database_directory')
