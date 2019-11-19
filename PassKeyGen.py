@@ -3,7 +3,7 @@ import json
 from cryptography.fernet import Fernet
 import os
 
-# i need to hash the password I think
+# I think I will be creating a GUI or NUI for a user interface I think it will be much more secure.
 
 """PassGen creates a randomized password for you, all you have to do is define the length and
 PassGen will generate it create a json file containing your data and finally encrypt it."""
